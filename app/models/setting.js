@@ -91,6 +91,8 @@ export default Model.extend(ValidationEngine, {
      */
     oauthClientId: attr('string'),
     oauthClientSecret: attr('string'),
+    GitHubEmailPattern: attr('string'),
+    GitHubOrg: attr('string'),
     /**
      * Editor settings
      */

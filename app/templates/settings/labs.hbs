@@ -212,11 +212,11 @@
                     </div>
                     <div class="gh-expandable-content">
                         {{#if this.isOAuthEnabled}}
-                            <div class="gh-setting-content-extended gh-labs-sso-settings pt2 pb4">
-                                <a href="https://console.developers.google.com/" target="_blank" rel="noopener" class="gh-btn gh-btn-white mb4"><span>{{svg-jar "google-favicon"}}Configure Google OAuth</span></a>
+                            <div class="gh-setting-content-extended pt2 pb4">
+                                <a href="https://console.developers.google.com/" target="_blank" rel="noopener" class="gh-btn gh-btn-white mb4"><span>{{svg-jar "github"}}Configure GitHub OAuth</span></a>
                                 <GhFormGroup @class="no-margin pt2" @errors={{this.settings.errors}} @hasValidated={{this.settings.hasValidated}} @property="password">
                                     <div class="form-group">
-                                        <label for="aouth-client-id">Google OAuth Client ID</label>
+                                        <label for="oauth-client-id">GitHub OAuth Client ID</label>
                                         <GhTextInput
                                             id="oauth-client-id"
                                             @value={{readonly this.settings.oauthClientId}}
@@ -227,13 +227,33 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="oauth-client-secret">Google OAuth Client Secret</label>
+                                        <label for="oauth-client-secret">GitHub OAuth Client Secret</label>
                                         <GhTextInput
                                             id="oauth-client-secret"
                                             @value={{readonly this.settings.oauthClientSecret}}
                                             @name="oauth-client-secret"
                                             @focus-out={{action "saveOAuthSettings"}}
                                             @input={{action (mut this.settings.oauthClientSecret) value="target.value"}}
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="github-email-pattern">Optional pattern to match org emails against</label>
+                                        <GhTextInput
+                                                id="github-email-pattern"
+                                                @value={{readonly this.settings.GitHubEmailPattern}}
+                                                @name="github-email-pattern"
+                                                @focus-out={{action "saveOAuthSettings"}}
+                                                @input={{action (mut this.settings.GitHubEmailPattern) value="target.value"}}
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="github-org">Organisation that can join without invites</label>
+                                        <GhTextInput
+                                                id="github-org"
+                                                @value={{readonly this.settings.GitHubOrg}}
+                                                @name="github-email-pattern"
+                                                @focus-out={{action "saveOAuthSettings"}}
+                                                @input={{action (mut this.settings.GitHubOrg) value="target.value"}}
                                         />
                                     </div>
                                 </GhFormGroup>
@@ -277,19 +297,6 @@
                         </div>
                         <div class="for-switch">
                            <GhFeatureFlag @flag="emailCardSegments" />
-                        </div>
-                    </div>
-                </div>
-                <div class="gh-expandable-block">
-                    <div class="gh-expandable-header">
-                        <div>
-                            <h4 class="gh-expandable-title">Show saved state in editor</h4>
-                            <p class="gh-expandable-description">
-                                Post status in editor shows "- Saved" when a post has no unsaved changes
-                            </p>
-                        </div>
-                        <div class="for-switch">
-                           <GhFeatureFlag @flag="savedIndicator" />
                         </div>
                     </div>
                 </div>
