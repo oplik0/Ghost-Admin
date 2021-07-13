@@ -190,9 +190,9 @@
                 <div class="gh-expandable-block">
                     <div class="gh-expandable-header">
                         <div>
-                            <h4 class="gh-expandable-title">Google OAuth for staff users</h4>
+                            <h4 class="gh-expandable-title">GitHub OAuth for staff users</h4>
                             <p class="gh-expandable-description">
-                                Allow people to sign into Ghost Admin using Google SSO,
+                                Allow people to sign into Ghost Admin using GitHub SSO,
                                 {{!-- TODO: create an help desk article and update the url here --}}
                                 <a href="#" target="_blank" rel="noopener">docs here</a>
                             </p>
@@ -213,7 +213,7 @@
                     <div class="gh-expandable-content">
                         {{#if this.isOAuthEnabled}}
                             <div class="gh-setting-content-extended pt2 pb4">
-                                <a href="https://console.developers.google.com/" target="_blank" rel="noopener" class="gh-btn gh-btn-white mb4"><span>{{svg-jar "github"}}Configure GitHub OAuth</span></a>
+                                <a href="https://console.developers.google.com/" target="_blank" rel="noopener" class="gh-btn gh-btn-white gh-btn-block mb4"><span>{{svg-jar "github-favicon"}}Configure GitHub OAuth</span></a>
                                 <GhFormGroup @class="no-margin pt2" @errors={{this.settings.errors}} @hasValidated={{this.settings.hasValidated}} @property="password">
                                     <div class="form-group">
                                         <label for="oauth-client-id">GitHub OAuth Client ID</label>
@@ -240,20 +240,20 @@
                                         <label for="github-email-pattern">Optional pattern to match org emails against</label>
                                         <GhTextInput
                                                 id="github-email-pattern"
-                                                @value={{readonly this.settings.GitHubEmailPattern}}
+                                                @value={{readonly this.settings.GithubEmailPattern}}
                                                 @name="github-email-pattern"
                                                 @focus-out={{action "saveOAuthSettings"}}
-                                                @input={{action (mut this.settings.GitHubEmailPattern) value="target.value"}}
+                                                @input={{action (mut this.settings.GithubEmailPattern) value="target.value"}}
                                         />
                                     </div>
                                     <div class="form-group">
                                         <label for="github-org">Organisation that can join without invites</label>
                                         <GhTextInput
                                                 id="github-org"
-                                                @value={{readonly this.settings.GitHubOrg}}
+                                                @value={{readonly this.settings.GithubOrg}}
                                                 @name="github-email-pattern"
                                                 @focus-out={{action "saveOAuthSettings"}}
-                                                @input={{action (mut this.settings.GitHubOrg) value="target.value"}}
+                                                @input={{action (mut this.settings.GithubOrg) value="target.value"}}
                                         />
                                     </div>
                                 </GhFormGroup>
