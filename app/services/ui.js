@@ -1,4 +1,10 @@
 import Service, {inject as service} from '@ember/service';
+import {
+    Color,
+    darkenToContrastThreshold,
+    lightenToContrastThreshold,
+    textColorForBackgroundColor
+} from '@tryghost/color-utils';
 import {action} from '@ember/object';
 import {get} from '@ember/object';
 import {isEmpty} from '@ember/utils';
@@ -37,8 +43,10 @@ function updateBodyClasses(transition) {
 export default class UiService extends Service {
     @service config;
     @service dropdown;
+    @service feature;
     @service mediaQueries;
     @service router;
+    @service settings;
 
     @tracked isFullScreen = false;
     @tracked mainClass = '';
@@ -54,6 +62,38 @@ export default class UiService extends Service {
 
     get hasSideNav() {
         return !this.isSideNavHidden;
+    }
+
+    get backgroundColor() {
+        // hardcoded background colors because
+        // grabbing color from .gh-main with getComputedStyle always returns #ffffff
+        return this.feature.nightShift ? '#151719' : '#ffffff';
+    }
+
+    get adjustedAccentColor() {
+        const accentColor = Color(this.settings.get('accentColor'));
+        const backgroundColor = Color(this.backgroundColor);
+
+        // WCAG contrast. 1 = lowest contrast, 21 = highest contrast
+        const accentContrast = accentColor.contrast(backgroundColor);
+
+        if (accentContrast > 2) {
+            return accentColor.hex();
+        }
+
+        let adjustedAccentColor = accentColor;
+
+        if (this.feature.nightShift) {
+            adjustedAccentColor = lightenToContrastThreshold(accentColor, backgroundColor, 2);
+        } else {
+            adjustedAccentColor = darkenToContrastThreshold(accentColor, backgroundColor, 2);
+        }
+
+        return adjustedAccentColor.hex();
+    }
+
+    get textColorForAdjustedAccentBackground() {
+        return textColorForBackgroundColor(this.adjustedAccentColor).hex();
     }
 
     constructor() {

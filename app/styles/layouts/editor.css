@@ -446,12 +446,6 @@ body[data-user-is-dragging] .gh-editor-feature-image-dropzone {
     height: 4px;
 }
 
-.gh-editor-feature-image {
-    margin-left: -1.2rem;
-    padding-left: 1.2rem;
-    border-left: 1px solid var(--whitegrey);
-}
-
 .gh-editor-feature-image .image-delete {
     opacity: 0;
 }
@@ -521,12 +515,10 @@ body[data-user-is-dragging] .gh-editor-feature-image-dropzone {
 .gh-editor-feature-image-alttext,
 .gh-editor-feature-image-caption {
     width: 100%;
-    margin: 0 0 1.7em -1.2rem;
-    padding: 0 0 0 1.2rem;
+    margin: 0 0 1.7em 0;
     outline: none;
     border-width: 0;
     border-style: none;
-    border-left: 1px solid var(--whitegrey);
     font-size: 1.4rem;
     line-height: 1.65;
     letter-spacing: .04rem;
@@ -973,4 +965,85 @@ figure {
     top: 0;
     bottom: 0;
     z-index: 400;
+}
+
+/* Email-CTA card
+/* -------------------------------------------------------------------------- */
+
+.kg-email-card .border-top {
+    margin: -1.6rem 0 2.4rem;
+}
+
+.kg-email-card .border-bottom {
+    margin: 2.4rem 0 1rem;
+}
+
+.kg-email-card.no-border {
+    border-left: none;
+}
+
+.email-cta-button-text-input {
+    margin-right: 1.2rem;
+    padding: 4px;
+    border: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    user-select: auto;
+}
+
+.email-cta-button-url-input {
+    margin-right: 1.2rem;
+}
+
+.kg-card-help-labs {
+    margin: 0 -13px 16px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--whitegrey);
+    background: var(--whitegrey-l2);
+}
+
+.kg-card-help-labs p {
+    color: var(--midgrey);
+    text-align: left;
+}
+
+.kg-card-help-labs .ember-power-select-trigger:not(.gh-setting-dropdown):not(.ember-power-select-multiple-trigger) svg {
+    width: 8px;
+    height: 6px;
+    margin-top: 0;
+}
+
+.kg-card-help-labs .ember-basic-dropdown-content {
+    width: 200px !important;
+}
+
+.ember-power-select-inline-labs {
+    padding: 0 2px;
+    color: var(--darkgrey);
+}
+
+.gh-member-segment-select-dropdown {
+    width: unset !important;
+    min-width: min-content !important;
+    margin-top: 4px;
+    border-top: 1px solid var(--input-border-color) !important;
+    border-radius: 3px !important;
+}
+
+.gh-btn-accent {
+    height: 38px;
+}
+
+.gh-btn-accent span {
+    height: 38px;
+    font-size: 1.5rem;
+    line-height: 38px;
+}
+
+.gh-email-cta-segment-indicator p {
+    padding: 4px 0 24px !important;
+    color: var(--midgrey);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.4rem;
 }

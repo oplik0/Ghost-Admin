@@ -1,0 +1,111 @@
+<KoenigCard
+    @icon={{"koenig/card-indicator-email"}}
+    @class={{concat (kg-style "container-card") " kg-email-card mih10 miw-100 relative"}}
+    @style={{@cardStyle}}
+    @headerOffset={{@headerOffset}}
+    @toolbar={{this.toolbar}}
+    @payload={{@payload}}
+    @isSelected={{@isSelected}}
+    @isEditing={{@isEditing}}
+    @selectCard={{@selectCard}}
+    @deselectCard={{@deselectCard}}
+    @editCard={{@editCard}}
+    @saveCard={{@saveCard}}
+    @saveAsSnippet={{@saveAsSnippet}}
+    @onLeaveEdit={{this.leaveEditMode}}
+    @addParagraphAfterCard={{@addParagraphAfterCard}}
+    @moveCursorToPrevSection={{@moveCursorToPrevSection}}
+    @moveCursorToNextSection={{@moveCursorToNextSection}}
+    @editor={{@editor}}
+    as |card|
+>
+    {{#if @isEditing}}
+
+        <div class="kg-card-help kg-card-help-labs">
+            <p>
+                <span>
+                    Only visible to
+                    <PowerSelect
+                        @options={{this.segments}}
+                        @selected={{this.selectedSegment}}
+                        @onChange={{this.setSegment}}
+                        @searchEnabled={{false}}
+                        @triggerComponent="gh-power-select/trigger"
+                        @triggerClass="ember-power-select-inline ember-power-select-inline-labs"
+                        @dropdownClass="gh-member-segment-select-dropdown"
+                        as |segment|
+                    >
+                        {{segment.name}}
+                    </PowerSelect>
+                    when delivered by email.
+                    This card will not be published on your site.
+                </span>
+            </p>
+        </div>
+
+        <KoenigTextReplacementHtmlInput
+            @html={{@payload.html}}
+            @placeholder="Email only text... (optional)"
+            @autofocus={{true}}
+            @class="miw-100 bn bg-transparent"
+            @onChange={{this.updateHtml}}
+            @onFocus={{fn (mut this.contentFocused) true}}
+            @onBlur={{fn (mut this.contentFocused) false}}
+            @didCreateEditor={{this.registerEditor}}
+        />
+        <form class="flex mt6">
+            <label for="button-text-input" class="sr-only">CTA button text</label>
+            <input
+                type="text"
+                class="gh-btn email-cta-button-text-input"
+                id="button-text-input"
+                name="button-text"
+                value={{@payload.buttonText}}
+                placeholder={{if this.buttonFocused "" "Add button text"}}
+                {{on "input" this.setButtonText}}
+                {{on "focus" (fn (mut this.buttonFocused) true)}}
+                {{on "blur" (fn (mut this.buttonFocused) false)}}
+                {{on-key "Enter" (fn this.focusElement "#button-url-input")}}
+            >
+
+            <label for="button-url-input" class="sr-only">CTA URL</label>
+            <input
+                type="text"
+                class="gh-input email-cta-button-url-input"
+                id="button-url-input"
+                name="button-url"
+                value={{@payload.buttonUrl}}
+                placeholder="https://yoursite.com/#/portal/signup/"
+                {{on "input" this.setButtonUrl}}
+                {{on-key "Enter" this.blurElement}}
+            >
+
+            <div class="gh-btn-group icons">
+                <button type="button" class="gh-btn gh-btn-icon {{if (eq @payload.buttonAlignment "left") "gh-btn-group-selected"}}" {{on "click" (fn this.setButtonAlignment "left")}}><span>{{svg-jar "align-left"}}</span></button>
+                <button type="button" class="gh-btn gh-btn-icon {{if (eq @payload.buttonAlignment "center") "gh-btn-group-selected"}}" {{on "click" (fn this.setButtonAlignment "center")}}><span>{{svg-jar "align-center"}}</span></button>
+            </div>
+        </form>
+    {{else}}
+        <div class="gh-email-cta-segment-indicator">
+            <p>{{capitalize this.selectedSegment.name}}</p>
+        </div>
+
+        {{#if this.hasTopDivider}}<hr class="border-top">{{/if}}
+
+        {{#if @payload.html}}
+            <div class="relative">
+                <p>{{{this.formattedHtml}}}</p>
+                <div class="koenig-card-click-overlay"></div>
+            </div>
+        {{/if}}
+
+        {{#if (and @payload.buttonText @payload.buttonUrl)}}
+            <div class="{{if @payload.html "mt6"}} {{if (eq @payload.buttonAlignment "center") "tc"}}"><a class="gh-btn gh-btn-accent" href="javascript:void(0)" data-tooltip={{@payload.buttonUrl}}><span>{{@payload.buttonText}}</span></a></div>
+        {{/if}}
+
+        {{#if this.hasBottomDivider}}<hr class="border-bottom">{{/if}}
+
+    {{/if}}
+
+
+</KoenigCard>

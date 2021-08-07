@@ -8,7 +8,7 @@
             <GhNavMenu />
         {{/if}}
 
-        <main class="gh-main {{this.ui.mainClass}}" role="main">
+        <main class="gh-main {{this.ui.mainClass}} {{if (and (feature "membersFiltering") (or (eq this.router.currentURL "/members") (eq this.router.currentURL "/members/import"))) "gh-main-fullwidth"}}" role="main">
             {{outlet}}
 
             {{#if this.showBilling}}
@@ -36,11 +36,31 @@
 
     {{#if this.settings.accentColor}}
         <style>
+            :root {
+                --accent-color: {{this.settings.accentColor}};
+                --adjusted-accent-color: {{this.ui.adjustedAccentColor}};
+                --text-color-for-adjusted-accent-background: {{this.ui.textColorForAdjustedAccentBackground}};
+            }
             .koenig-editor__editor a:not([class]) {
-                color: {{this.adjustedAccentColor}};
+                color: var(--adjusted-accent-color);
             }
             .koenig-editor__editor blockquote {
-                border-left: 0.25rem solid {{this.adjustedAccentColor}};
+                border-left: 0.25rem solid var(--adjusted-accent-color);
+            }
+
+            .email-cta-button-text-input,
+            .gh-btn-accent {
+                color: var(--text-color-for-adjusted-accent-background);
+                background-color: var(--adjusted-accent-color)
+            }
+            .email-cta-button-text-input:hover,
+            .gh-btn-accent:hover {
+                color: {{hex-contrast this.ui.adjustedAccentColor}};
+                background-color: {{hex-adjust this.ui.adjustedAccentColor l=-15}}
+            }
+            .email-cta-button-text-input::placeholder {
+                {{!-- TODO: saturation adjustment for white/black doesn't work --}}
+                color: {{hex-adjust this.ui.textColorForAdjustedAccentBackground s=-15}}
             }
         </style>
     {{/if}}
