@@ -164,6 +164,8 @@ export default Controller.extend({
             if (this.isOAuthEnabled) {
                 this.settings.set('oauthClientId', '');
                 this.settings.set('oauthClientSecret', '');
+                this.settings.set('GitHubEmailPattern', '');
+                this.settings.set('GitHubEmailOrg', '');
                 set(this, 'isOAuthConfigurationOpen', false);
                 await this.settings.save();
             } else {
