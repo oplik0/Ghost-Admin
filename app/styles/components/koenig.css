@@ -19,7 +19,9 @@
 }
 
 .koenig-editor__editor.__has-no-content:after,
-.koenig-text-replacement-html-input__editor.__has-no-content:after{
+.koenig-text-replacement-html-input__editor.__has-no-content:after,
+.koenig-basic-html-textarea__editor.__has-no-content:after,
+.kg-card-callout .koenig-basic-html-input__editor.__has-no-content:after {
     font-family: georgia,serif;
     font-weight: 300;
     letter-spacing: .02rem;
@@ -923,6 +925,109 @@
     display: block;
 }
 
+/* In-line media selector
+/* --------------------------------------------------------------- */
+
+.kg-media-selector {
+    position: absolute;
+    width: 90%;
+    height: 600px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 1em;
+}
+
+/* Card settings panel
+/* --------------------------------------------------------------- */
+
+.kg-settings-panel {
+    position: fixed;
+    width: 320px;
+    max-height: 60vh;
+    overflow: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--white);
+    line-height: 1em;
+    z-index: 9999999999;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    box-shadow:
+        0px -1px 10px rgba(0, 0, 0, 0.08),
+        0px 2.8px 2.2px rgba(0, 0, 0, 0.014),
+        0px 6.7px 5.3px rgba(0, 0, 0, 0.02),
+        0px 12.5px 10px rgba(0, 0, 0, 0.025),
+        0px 22.3px 17.9px rgba(0, 0, 0, 0.03),
+        0px 41.8px 33.4px rgba(0, 0, 0, 0.036),
+        0px 100px 80px rgba(0, 0, 0, 0.05)
+    ;
+}
+
+.kg-settings-panel-enter-active,
+.kg-settings-panel-leave-active {
+    transition: opacity .2s;
+}
+.kg-settings-panel-enter,
+.kg-settings-panel-leave-to {
+    opacity: 0;
+}
+
+.kg-settings-panel-control {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.kg-settings-panel-control:not(:first-of-type):not(hr + .kg-settings-panel-control) {
+    margin-top: 8px;
+}
+
+.kg-settings-panel-control-horizontal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kg-settings-panel-control-label {
+    font-weight: 700;
+}
+
+.kg-settings-panel-control-info {
+    font-size: 12px !important;
+    font-family: var(--font-family) !important;
+    line-height: 1.4em !important;
+    color: var(--middarkgrey);
+}
+
+.kg-settings-panel-divider {
+    margin: 8px -24px !important;
+    border: none;
+    border-top: 1px solid var(--whitegrey);
+}
+
+.kg-settings-panel-control-input .gh-input,
+.kg-settings-panel-control-input .gh-select,
+.kg-settings-panel-control-input .ember-power-select-trigger {
+    font-size: 1.4rem !important;
+    padding: 5px 10px;
+    font-weight: 500;
+}
+
+.kg-settings-panel-control-input .ember-power-select-trigger svg {
+    position: absolute;
+    top: 18px;
+    right: 12px;
+}
+
+/* TODO: needed to fix right margin - should be somewhere more generic? */
+.kg-settings-panel-control .for-switch.x-small .switch {
+    width: 34px !important;
+}
+
+
 /* Cards
 /* --------------------------------------------------------------- */
 
@@ -1081,6 +1186,534 @@
     margin-left: .5em;
 }
 
+/* Email CTA card
+/* --------------------------------------------------------------- */
+
+.kg-email-cta-card {
+    padding-bottom: 24px;
+}
+
+/* Email-CTA card
+/* -------------------------------------------------------------------------- */
+
+.kg-email-cta-card .border-top {
+    margin: -1.6rem 0 5rem;
+}
+
+.kg-email-cta-card .border-top.edit-mode {
+    margin: 2.4rem 0 5rem;
+}
+
+.kg-email-cta-card .border-bottom {
+    margin: 5rem 0 0;
+}
+
+.kg-email-cta-card .kg-card-help {
+    margin: 0 -13px 16px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--whitegrey);
+    background: var(--whitegrey-l2);
+}
+
+.kg-email-cta-card .kg-card-help p {
+    color: var(--midgrey);
+    text-align: left;
+}
+
+.kg-email-cta-card .kg-card-help .ember-power-select-trigger:not(.gh-setting-dropdown):not(.ember-power-select-multiple-trigger) svg {
+    width: 8px;
+    height: 6px;
+    margin-top: 0;
+}
+
+.kg-email-cta-card .kg-card-help .ember-basic-dropdown-content {
+    width: 200px !important;
+}
+
+.kg-email-cta-card .kg-card-help .ember-power-select-inline {
+    padding: 0 2px;
+    color: var(--darkgrey);
+}
+
+.email-cta-toolbar {
+    display: flex;
+    margin: 24px -13px 0;
+    padding: .8rem 1rem;
+    border-top: 1px solid var(--whitegrey);
+}
+
+.email-cta-toolbar .borders {
+    margin-right: 1rem;
+    border-right: 1px solid var(--whitegrey-d2);
+    border-radius: 0;
+}
+
+.gh-btn-group.email-cta-align {
+    background: none;
+    margin-right: 1rem;
+    padding-right: 1rem;
+    border-right: 1px solid var(--whitegrey-d2);
+}
+
+.gh-btn-group.email-cta-align .gh-btn span {
+    padding: 0 4px;
+}
+
+.gh-btn-group.email-cta-align .gh-btn-group-selected span {
+    box-shadow: none;
+}
+
+.gh-btn-group.email-cta-align .gh-btn-group-selected svg {
+    fill: var(--green-d1);
+}
+
+.gh-btn-group.email-cta-align .gh-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.gh-btn.email-cta-toolbar-item {
+    margin-right: 1rem;
+    box-shadow: none;
+}
+
+.gh-btn.email-cta-toolbar-item svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+}
+
+.gh-btn.email-cta-toolbar-item span {
+    margin-top: 2px;
+    padding: 0 8px;
+}
+
+.gh-btn.email-cta-toolbar-item svg path {
+    stroke: none;
+}
+
+.email-cta-button {
+    margin-top: 2rem;
+    padding: 4px;
+    border: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    user-select: auto;
+}
+
+.email-cta-button-text-input {
+    width: auto;
+    max-width: 200px;
+    margin-right: .8rem;
+    color: var(--black);
+    font-size: 1.5rem;
+    font-weight: 400;
+    user-select: auto;
+}
+
+.email-cta-button-url-input {
+    width: 100%;
+    padding: 4px 12px;
+    color: var(--black);
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.gh-member-segment-select-dropdown {
+    border-top: 1px solid var(--input-border-color) !important;
+    border-radius: 3px !important;
+}
+
+.kg-email-cta-card .gh-btn-accent {
+    margin-top: 2.4rem;
+}
+
+.kg-email-cta-card .gh-btn-accent span {
+    font-size: 1.5rem;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+}
+
+.gh-email-cta-segment-indicator p {
+    padding: 6px 0 29px !important;
+    color: var(--midlightgrey-d1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+
+/* Callout card
+/* --------------------------------------------------------------- */
+
+.kg-card-callout-container {
+    position: relative;
+    min-height: 4rem;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.kg-card-callout {
+    display: flex;
+    padding: 20px 28px;
+    background: var(--whitegrey-l1);
+    border-radius: var(--border-radius);
+}
+
+.kg-card-callout-grey {
+    background: rgba(124, 139, 154, 0.13);
+}
+
+.kg-card-callout-white {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(124, 139, 154, 0.25);
+}
+
+.kg-card-callout-blue {
+    background: rgba(33, 172, 232, 0.12);
+}
+
+.kg-card-callout-green {
+    background: rgba(52, 183, 67, 0.12);
+}
+
+.kg-card-callout-yellow {
+    background: rgba(240, 165, 15, 0.13);
+}
+
+.kg-card-callout-red {
+    background: rgba(209, 46, 46, 0.11);
+}
+
+.kg-card-callout-pink {
+    background: rgba(225, 71, 174, 0.11);
+}
+
+.kg-card-callout-purple {
+    background: rgba(135, 85, 236, 0.12);
+}
+
+.kg-card-callout-accent {
+    background: var(--adjusted-accent-color);
+}
+
+.kg-card-callout-accent p,
+.kg-card-callout-accent a {
+    color: var(--white) !important;
+}
+
+.kg-callout-emoji {
+    height: 32px;
+    margin-right: 8px;
+    margin-left: -8px;
+    padding: 0 8px;
+    font-size: 2rem;
+    line-height: 1.6;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+}
+
+.kg-callout-emoji:hover,
+.kg-emoji-picker-active {
+    background: rgba(124, 139, 154, 0.13);
+}
+
+.kg-callout-palette {
+    display: flex;
+    justify-content: space-between;
+    margin-top: .4rem;
+}
+
+.kg-callout-palette-swatch {
+    display: inline-block;
+    cursor: pointer;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.kg-callout-palette-swatch:hover {
+    box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.kg-callout-palette-swatch.selected-swatch {
+    box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.kg-callout-palette-swatch-grey {
+    background: rgba(124, 139, 154, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(124, 139, 154, 0.3);
+}
+
+.kg-callout-palette-swatch-white {
+    background: transparent;
+    border: 1px solid rgba(124, 139, 154, 0.45);
+}
+
+.kg-callout-palette-swatch-blue {
+    background: rgba(33, 172, 232, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(33, 172, 232, 0.3);
+}
+
+.kg-callout-palette-swatch-green {
+    background: rgba(52, 183, 67, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(52, 183, 67, 0.3);
+}
+
+.kg-callout-palette-swatch-yellow {
+    background: rgba(240, 165, 15, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(240, 165, 15, 0.3);
+}
+
+.kg-callout-palette-swatch-red {
+    background: rgba(209, 46, 46, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(209, 46, 46, 0.3);
+}
+
+.kg-callout-palette-swatch-pink {
+    background: rgba(225, 71, 174, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(225, 71, 174, 0.3);
+}
+
+.kg-callout-palette-swatch-purple {
+    background: rgba(135, 85, 236, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(135, 85, 236, 0.3);
+}
+
+.kg-callout-palette-swatch-accent {
+    background: var(--adjusted-accent-color);
+}
+
+.emoji-picker__wrapper {
+    margin-top: 1rem !important;
+}
+
+.emoji-picker {
+    background: var(--white) !important;
+    border: 0 !important;
+    font-family: var(--font-family) !important;
+    box-shadow:
+        0px -1px 10px rgba(0, 0, 0, 0.08),
+        0px 2.8px 2.2px rgba(0, 0, 0, 0.014),
+        0px 6.7px 5.3px rgba(0, 0, 0, 0.02),
+        0px 12.5px 10px rgba(0, 0, 0, 0.025),
+        0px 22.3px 17.9px rgba(0, 0, 0, 0.03),
+        0px 41.8px 33.4px rgba(0, 0, 0, 0.036),
+        0px 100px 80px rgba(0, 0, 0, 0.05)
+    ;
+}
+
+.emoji-picker__search-container {
+    margin: 0 !important;
+}
+
+.emoji-picker__search {
+    padding: 24px 16px !important;
+    color: var(--middarkgrey) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--whitegrey-d1) !important;
+    font-family: var(--font-family) !important;
+    font-size: 1.45rem !important;
+    border-radius: 0 !important;
+}
+
+.emoji-picker__search-icon {
+    top: calc(50% - .4rem) !important;
+    right: 1.8rem !important;
+    color: var(--lightgrey) !important;
+}
+
+button.emoji-picker__category-button {
+    color: var(--midlightgrey) !important;
+}
+
+button.emoji-picker__category-button.active {
+    color: var(--darkgrey) !important;
+    border-bottom: var(--category-border-bottom-size) solid transparent !important;
+}
+
+.emoji-picker__content {
+    margin-top: 2rem !important;
+}
+
+.emoji-picker__emojis {
+    padding: 0 8px !important;
+}
+
+.emoji-picker__emoji:hover,
+.emoji-picker__emoji:focus {
+    background: var(--whitegrey) !important;
+    border-radius: var(--border-radius) !important;
+}
+
+.emoji-picker__category-name {
+    margin: .8rem 0 1rem !important;
+    color: var(--darkgrey) !important;
+    font-family: var(--font-family) !important;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+/* Accordion card
+/* --------------------------------------------------------------- */
+
+.kg-accordion-card-container {
+    position: relative;
+    min-height: 4rem;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.kg-accordion-card {
+    display: flex;
+    padding: 16px 24px;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(124, 139, 154, 0.25);
+    border-radius: 4px;
+    flex-direction: column;
+}
+
+.kg-accordion-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.kg-accordion-card-heading {
+    margin-right: 16px;
+}
+
+.kg-accordion-card-heading h4 {
+    font-weight: 600 !important;
+}
+
+.kg-accordion-card-heading ::after {
+    font-weight: 600 !important;
+    font-size: 2rem !important;
+    letter-spacing: .02rem;
+    line-height: 1.6em;
+}
+
+.kg-accordion-card-content ::after {
+    line-height: 1.6em;
+}
+
+.kg-accordion-card-content {
+    margin-top: 8px;
+}
+
+.kg-accordion-card-arrow-container {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kg-accordion-card-arrow {
+    width: 14px;
+    color: rgba(124, 139, 154, 0.5)
+}
+
+/* Button card
+/* --------------------------------------------------------------- */
+.kg-button-card {
+    padding: 12px;
+}
+
+.kg-button-card .gh-btn span {
+    font-size: 1.5rem;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+}
+
+/* NFT card
+/* --------------------------------------------------------------- */
+.kg-nft-card a {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    text-decoration: none !important;
+    font-size: 1.4rem;
+    font-weight: 400;
+    width: 100%;
+    min-width: 440px;
+    max-width: 512px;
+    border: 1px solid var(--whitegrey);
+    border-radius: 5px;
+    color: #15171A !important;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.kg-nft-image {
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+}
+
+.kg-nft-card:hover {
+    color: inherit;
+}
+
+.kg-nft-card * {
+    position: static;
+}
+
+.kg-nft-metadata {
+    padding: 20px;
+}
+
+.kg-nft-card .kg-nft-image {
+    border-radius: 5px 5px 0 0;
+}
+
+.kg-nft-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.kg-nft-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.3em;
+    min-width: unset;
+    max-width: unset;
+    color: #15171A !important;
+}
+
+.kg-nft-opensea-logo {
+    margin-top: 4px;
+    width: 100px;
+    object-fit: scale-down;
+}
+
+.kg-nft-creator {
+    margin-top: 2px;
+    color: #626D79;
+    line-height: 1.4em;
+}
+
+.kg-nft-creator span {
+    font-weight: 500;
+    color: #15171A;
+}
+
+.kg-nft-card div + p {
+    font-family: var(--font-family);
+    font-size: 1.4rem;
+    margin-top: 20px;
+}
+
+/* .kg-nft-card  */
 
 /* Codemirror overrides
 /* --------------------------------------------------------------- */

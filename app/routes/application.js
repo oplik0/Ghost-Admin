@@ -36,6 +36,7 @@ export default Route.extend(ShortcutsRoute, {
     settings: service(),
     ui: service(),
     whatsNew: service(),
+    billing: service(),
 
     shortcuts,
 
@@ -162,6 +163,7 @@ export default Route.extend(ShortcutsRoute, {
                 release: `ghost@${this.config.get('version')}`,
                 beforeSend(event) {
                     event.tags = event.tags || {};
+                    event.tags.shown_to_user = event.tags.shown_to_user || false;
                     event.tags.grammarly = !!document.querySelector('[data-gr-ext-installed]');
                     return event;
                 }
@@ -176,6 +178,11 @@ export default Route.extend(ShortcutsRoute, {
             }
 
             await this.session.postAuthPreparation();
+        }
+
+        if (this.config.get('hostSettings.forceUpgrade')) {
+            // enforce opening the BMA in a force upgrade state
+            this.billing.openBillingWindow(this.router.currentURL, '/pro');
         }
     }
 

@@ -1,81 +1,56 @@
-<header class="gh-nav-menu">
-    <LinkTo @route="settings" class="gh-nav-menu-title">{{svg-jar "arrow-left-tail"}} Site design</LinkTo>
-</header>
-<section class="gh-nav-body">
-    <div class="gh-nav-top">
+<div class="flex flex-column h-100" {{css-transition "gh-nav-contextual"}} data-test-nav-menu="design" ...attributes>
+    <header class="gh-nav-header">
+        <LinkTo @route="settings" class="gh-nav-menu-back-button">{{svg-jar "arrow-left-small"}} Settings</LinkTo>
+    </header>
+    <section class="gh-nav-body gh-nav-design">
+        <div class="gh-nav-top" {{on "click" this.transitionBackToIndex}}>
+            <div class="gh-nav-list gh-nav-main">
+                <LinkTo @route="settings.design" class="gh-nav-menu-title" @current-when="settings.design.index" {{on "click" this.closeAllSections}}>Site design</LinkTo>
 
-        <div class="pl6 pt4 pr6">
-            <button type="button" {{on "click" (fn this.toggleSection "brand")}} class="flex flex-row w-100">
-                <span class="db tl flex-grow-1">{{svg-jar "house" class="w4"}} Brand</span>
-                <span class="db">{{svg-jar (if (set-has this.openSections "brand") "arrow-up-small" "arrow-down-small") class="w4"}}</span>
-            </button>
-            {{#if (set-has this.openSections "brand")}}
-                <div class="pt4">
-                    <Settings::Design::GeneralSettingsForm
-                        @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
-                    />
-                </div>
-            {{/if}}
+                {{#let (eq this.openSection "brand") as |isOpen|}}
+                    <button class="gh-nav-design-tab {{if isOpen "active"}}" type="button" {{on "click" (fn this.toggleSection "brand")}} data-test-nav-toggle="general">
+                        {{svg-jar "paintbrush"}} Brand
+                        <span class="gh-nav-button-expand">{{svg-jar (if isOpen "arrow-up-stroke" "arrow-down-stroke")}}</span>
+                    </button>
+                    {{#liquid-if isOpen}}
+                        <div class="gh-nav-design-settings" data-test-nav-group="general">
+                            <Settings::Design::GeneralSettingsForm
+                                @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
+                            />
+                        </div>
+                    {{/liquid-if}}
+                {{/let}}
+
+                {{#each this.customThemeSettings.settingGroups as |group|}}
+                    {{#let (eq this.openSection group.key) as |isOpen|}}
+                        <button class="gh-nav-design-tab {{if isOpen "active"}}" type="button" {{on "click" (fn this.toggleSection group.key)}}>
+                            {{svg-jar group.icon}} {{group.name}}
+                            <span class="gh-nav-button-expand">{{svg-jar (if isOpen "arrow-up-stroke" "arrow-down-stroke")}}</span>
+                        </button>
+
+                        {{#liquid-if isOpen}}
+                            <div class="gh-nav-design-settings" data-test-nav-group={{group.key}}>
+                                <Settings::Design::ThemeSettingsForm
+                                    @themeSettings={{group.settings}}
+                                    @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
+                                />
+                            </div>
+                        {{/liquid-if}}
+                    {{/let}}
+                {{/each}}
+            </div>
         </div>
 
-        {{#if this.themeSettings}}
-            {{#if this.siteWideSettings}}
-                <div class="mt4 pl6 pt4 pr6">
-                    <button type="button" {{on "click" (fn this.toggleSection "site-wide")}} class="flex flex-row w-100">
-                        <span class="db tl flex-grow-1">{{svg-jar "house" class="w4"}} Site-wide</span>
-                        <span class="db">{{svg-jar (if (set-has this.openSections "site-wide") "arrow-up-small" "arrow-down-small") class="w4"}}</span>
-                    </button>
-
-                    {{#if (set-has this.openSections "site-wide")}}
-                        <div class="pt4">
-                            <Settings::Design::ThemeSettingsForm
-                                @themeSettings={{this.siteWideSettings}}
-                                @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
-                            />
-                        </div>
-                    {{/if}}
-                </div>
-            {{/if}}
-
-            {{#if this.homepageSettings}}
-                <div class="mt4 pl6 pt4 pr6">
-                    <button type="button" {{on "click" (fn this.toggleSection "homepage")}} class="flex flex-row w-100">
-                        <span class="db tl flex-grow-1">{{svg-jar "house" class="w4"}} Homepage</span>
-                        <span class="db">{{svg-jar (if (set-has this.openSections "homepage") "arrow-up-small" "arrow-down-small") class="w4"}}</span>
-                    </button>
-
-                    {{#if (set-has this.openSections "homepage")}}
-                        <div class="pt4">
-                            <Settings::Design::ThemeSettingsForm
-                                @themeSettings={{this.homepageSettings}}
-                                @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
-                            />
-                        </div>
-                    {{/if}}
-                </div>
-            {{/if}}
-
-            {{#if this.postPageSettings}}
-                <div class="mt4 pl6 pt4 pr6">
-                    <button type="button" {{on "click" (fn this.toggleSection "post")}} class="flex flex-row w-100">
-                        <span class="db tl flex-grow-1">{{svg-jar "house" class="w4"}} Post</span>
-                        <span class="db">{{svg-jar (if (set-has this.openSections "post") "arrow-up-small" "arrow-down-small") class="w4"}}</span>
-                    </button>
-
-                    {{#if (set-has this.openSections "post")}}
-                        <div class="pt4">
-                            <Settings::Design::ThemeSettingsForm
-                                @themeSettings={{this.postPageSettings}}
-                                @updatePreview={{perform this.themeManagement.updatePreviewHtmlTask}}
-                            />
-                        </div>
-                    {{/if}}
-                </div>
-            {{/if}}
-        {{/if}}
-    </div>
-
-    <div class="gh-nav-bottom">
-        <LinkTo @route="settings.design.advanced" class="gh-btn gh-btn-icon gh-btn-text"><span>{{svg-jar "settings"}} Advanced theme settings</span></LinkTo>
-    </div>
-</section>
+        <div class="gh-nav-bottom">
+            <div class="gh-change-theme">
+                <LinkTo class="gh-nav-design-tab" @route="settings.design.change-theme" {{on "click" this.closeAllSections}} data-test-nav="change-theme">
+                    <div>
+                        <span>Change theme</span>
+                        <span class="active-theme" data-test-text="current-theme">Current: {{this.activeTheme.name}}{{#if this.activeTheme.package.version}} - v{{this.activeTheme.package.version}}{{/if}}</span>
+                    </div>
+                    <div class="gh-nav-design-tabicon">{{svg-jar "sync"}}</div>
+                </LinkTo>
+            </div>
+        </div>
+    </section>
+</div>

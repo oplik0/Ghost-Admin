@@ -125,10 +125,6 @@ input[type=number] {
     margin-bottom: 0;
 }
 
-.form-group:last-of-type {
-    margin-bottom: 0;
-}
-
 @media (max-width: 550px) {
     .form-group {
         max-width: 100%;
@@ -256,6 +252,10 @@ textarea {
     color: var(--midlightgrey-d2);
     border-color: var(--whitegrey);
     opacity: 1.0;
+}
+
+.gh-select select[disabled] {
+    cursor: auto;
 }
 
 .gh-input-percentage-label {

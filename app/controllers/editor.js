@@ -293,6 +293,7 @@ export default Controller.extend({
             this.modals.open('modals/post-preview', {
                 post: this.post,
                 saveTask: this.saveTask,
+                hasDirtyAttributes: this.hasDirtyAttributes,
                 // TODO: update to call action method directly when switching to class syntax
                 setEditorSaveType: this.actions.setSaveType.bind(this),
                 memberCount: this.memberCount
@@ -670,12 +671,20 @@ export default Controller.extend({
     }).group('saveTasks'),
 
     // convenience method for saving the post and performing post-save cleanup
-    _savePostTask: task(function* (options) {
+    _savePostTask: task(function* (options = {}) {
         let {post} = this;
+
+        const previousEmailOnlyValue = this.post.emailOnly;
+
+        if (Object.prototype.hasOwnProperty.call(options, 'emailOnly')) {
+            this.post.set('emailOnly', options.emailOnly);
+        }
 
         try {
             yield post.save(options);
         } catch (error) {
+            this.post.set('emailOnly', previousEmailOnlyValue);
+
             if (isServerUnreachableError(error)) {
                 const [prevStatus, newStatus] = this.post.changedAttributes().status || [this.post.status, this.post.status];
                 this._showErrorAlert(prevStatus, newStatus, error);

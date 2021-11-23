@@ -7,7 +7,7 @@
 
     <div class="view-container gh-dashboard">
 
-        {{#if (and this.session.user.isOwnerOnly (not this.feature.launchComplete))}}
+        {{#if (and this.session.user.isOwnerOnly (not this.settings.editorIsLaunchComplete))}}
             <section class="gh-dashboard-area lw-banner">
                 <div class="gh-lw-banner" style="background-image:url(assets/img/launch-wizard-bg.png);">
                     <h1>Select your publication style</h1>
@@ -137,7 +137,7 @@
 
 
         <section class="gh-dashboard-area mixed">
-            {{#if (not this.feature.launchComplete)}}
+            {{#if (not this.settings.editorIsLaunchComplete)}}
             <div class="gh-dashboard-container start-contents">
                 <div class="gh-dashboard-box blogpost">
                     <h2>Start creating content</h2>
@@ -164,13 +164,12 @@
             <div class="gh-dashboard-container col-2">
                 <div class="gh-dashboard-box">
                     <div class="content">
-                        <h2>Customize your site design</h2>
+                        <h2>Customize your site{{unless this.feature.customThemeSettings " design"}}</h2>
                         <p>Stand out from the crowd. Ghost lets you customize everything so you can create a publication that doesn’t just look the same as what everyone else has.</p>
                     </div>
                     <div class="footer">
-                        <LinkTo class="gh-btn gh-btn-outline mt2 mr2" @route="settings"><span>Brand</span></LinkTo>
-                        <LinkTo class="gh-btn gh-btn-outline mt2 mr2" @route="settings.members-email"><span>Email</span></LinkTo>
-                        <LinkTo class="gh-btn gh-btn-outline mt2" @route="settings.theme"><span>Theme</span></LinkTo>
+                        <LinkTo class="gh-btn gh-btn-outline mt2 mr2" @route="settings.design"><span>Design</span></LinkTo>
+                        <LinkTo class="gh-btn gh-btn-outline mt2" @route="settings.members-email"><span>Email</span></LinkTo>
                     </div>
                 </div>
                 <div class="gh-dashboard-box">
@@ -282,7 +281,7 @@
                     </div>
                 {{/if}}
 
-                {{#unless (and this.session.user.isOwnerOnly (not this.feature.launchComplete))}}
+                {{#unless (and this.session.user.isOwnerOnly (not this.settings.editorIsLaunchComplete))}}
                     <div class="gh-dashboard-box grey activity-feed">
                         <h4 class="gh-dashboard-header">Activity feed</h4>
                         <div class="content">

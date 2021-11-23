@@ -5,6 +5,7 @@ import {task} from 'ember-concurrency';
 
 export default ModalComponent.extend({
     router: service(),
+    feature: service(),
     notifications: service(),
     integration: alias('model'),
     actions: {
@@ -15,7 +16,7 @@ export default ModalComponent.extend({
     deleteIntegration: task(function* () {
         try {
             yield this.confirm();
-            this.router.transitionTo('integrations');
+            this.router.transitionTo('settings.integrations');
         } catch (error) {
             this.notifications.showAPIError(error, {key: 'integration.delete.failed'});
         } finally {

@@ -1,5 +1,4 @@
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
-import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 
 export default class SettingsDesignRoute extends AuthenticatedRoute {
@@ -7,10 +6,8 @@ export default class SettingsDesignRoute extends AuthenticatedRoute {
     @service feature;
     @service modals;
     @service settings;
+    @service themeManagement;
     @service ui;
-
-    confirmModal = null;
-    hasConfirmed = false;
 
     beforeModel() {
         super.beforeModel(...arguments);
@@ -25,69 +22,30 @@ export default class SettingsDesignRoute extends AuthenticatedRoute {
     }
 
     model() {
-        return this.settings.reload();
+        // background refresh of preview
+        // not doing it on the 'index' route so that we don't reload going to/from the index,
+        // any actions performed on child routes that need a refresh should trigger it explicitly
+        this.themeManagement.updatePreviewHtmlTask.perform();
+
+        // wait for settings to be loaded - we need the data to be present before display
+        return Promise.all([
+            this.settings.reload(),
+            this.customThemeSettings.load()
+        ]);
     }
 
     activate() {
         this.ui.contextualNavMenu = 'design';
     }
 
-    @action
-    willTransition(transition) {
-        if (this.hasConfirmed) {
-            return true;
-        }
-
-        // always abort when not confirmed because Ember's router doesn't automatically wait on promises
-        transition.abort();
-
-        this.confirmUnsavedChanges().then((shouldLeave) => {
-            if (shouldLeave) {
-                this.hasConfirmed = true;
-                return transition.retry();
-            }
-        });
-    }
-
     deactivate() {
         this.ui.contextualNavMenu = null;
-        this.confirmModal = null;
-        this.hasConfirmed = false;
     }
 
-    async beforeModalClose() {
-        if (this.hasConfirmed) {
-            return;
-        }
-
-        const shouldLeave = await this.confirmUnsavedChanges();
-
-        if (shouldLeave === true) {
-            this.transitionTo('settings');
-        } else {
-            // prevent modal from closing
-            return false;
-        }
-    }
-
-    confirmUnsavedChanges() {
-        if (!this.settings.get('hasDirtyAttributes') && !this.customThemeSettings.isDirty) {
-            return Promise.resolve(true);
-        }
-
-        if (!this.confirmModal) {
-            this.confirmModal = this.modals.open('modals/confirm-unsaved-changes')
-                .then((discardChanges) => {
-                    if (discardChanges === true) {
-                        this.settings.rollbackAttributes();
-                        this.customThemeSettings.rollback();
-                    }
-                    return discardChanges;
-                }).finally(() => {
-                    this.confirmModal = null;
-                });
-        }
-
-        return this.confirmModal;
+    buildRouteInfoMetadata() {
+        return {
+            titleToken: 'Settings - Design',
+            mainClasses: ['gh-main-fullwidth']
+        };
     }
 }

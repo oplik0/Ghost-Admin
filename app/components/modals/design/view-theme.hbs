@@ -1,0 +1,44 @@
+<section class="gh-canvas gh-theme-preview flex flex-column h-100">
+    <GhCanvasHeader class="gh-canvas-header">
+        <h2 class="gh-canvas-title" data-test-screen-title>
+            <LinkTo @route="settings.design.change-theme" data-test-link="back">Themes</LinkTo>
+            <span>{{svg-jar "arrow-right"}}</span>
+            {{@data.theme.name}}
+        </h2>
+
+        <section class="view-actions">
+            <div class="gh-contentfilter gh-btn-group">
+                <button type="button" class="gh-btn gh-design-preview-mode {{if this.isDesktopPreview "gh-btn-group-selected"}}" {{on "click" (fn this.setPreviewSize "desktop")}}><span>{{svg-jar "desktop"}}</span></button>
+                <button type="button" class="gh-btn gh-design-preview-mode {{if this.isMobilePreview "gh-btn-group-selected"}}" {{on "click" (fn this.setPreviewSize "mobile")}}><span>{{svg-jar "mobile-phone"}}</span></button>
+            </div>
+
+            <button type="button" class="gh-btn gh-btn-primary" {{on "click" this.installTheme}} data-test-button="install-theme"><span>Use {{@data.theme.name}}</span></button>
+        </section>
+    </GhCanvasHeader>
+
+    <section class="view-container">
+        {{!-- changes only classes between desktop/mobile to avoid re-rendering iframe contents --}}
+        <div class="{{if this.isMobilePreview "gh-pe-mobile-container flex justify-center" "gh-browserpreview-previewcontainer gh-theme-previewcontainer"}}">
+            {{#if this.isDesktopPreview}}
+                <div class="gh-browserpreview-browser">
+                    <div class="tabs">
+                        <ul><li></li><li></li><li></li></ul>
+                        <div>
+                            {{#if this.settings.icon}}
+                                <span class="favicon"><img src={{this.settings.icon}} alt="icon"></span>
+                            {{else}}
+                                <span class="favicon default">{{svg-jar "default-favicon"}}</span>
+                            {{/if}}
+                            <span class="site-title">{{this.settings.title}}</span>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="{{if this.isMobilePreview "gh-pe-mobile-bezel" "gh-browserpreview-iframecontainer"}}">
+                <div class="{{if this.isMobilePreview "gh-pe-mobile-screen"}}">
+                    <iframe class={{if this.isMobilePreview "gh-post-preview-iframe" "site-frame"}} src={{@data.theme.previewUrl}} />
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

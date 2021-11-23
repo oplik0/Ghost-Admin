@@ -16,7 +16,7 @@ describe('Acceptance: Settings - Integrations - Zapier', function () {
 
     it('redirects to signin when not authenticated', async function () {
         await invalidateSession();
-        await visit('/integrations/zapier');
+        await visit('/settings/integrations/zapier');
 
         expect(currentURL(), 'currentURL').to.equal('/signin');
     });
@@ -26,9 +26,9 @@ describe('Acceptance: Settings - Integrations - Zapier', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/zapier');
+        await visit('/settings/integrations/zapier');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     it('redirects to staff page when authenticated as author', async function () {
@@ -36,9 +36,9 @@ describe('Acceptance: Settings - Integrations - Zapier', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/zapier');
+        await visit('/settings/integrations/zapier');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     it('redirects to staff page when authenticated as editor', async function () {
@@ -46,9 +46,9 @@ describe('Acceptance: Settings - Integrations - Zapier', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/zapier');
+        await visit('/settings/integrations/zapier');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff');
     });
 
     describe('when logged in', function () {
@@ -60,10 +60,10 @@ describe('Acceptance: Settings - Integrations - Zapier', function () {
         });
 
         it('it loads', async function () {
-            await visit('/integrations/zapier');
+            await visit('/settings/integrations/zapier');
 
             // has correct url
-            expect(currentURL(), 'currentURL').to.equal('/integrations/zapier');
+            expect(currentURL(), 'currentURL').to.equal('/settings/integrations/zapier');
         });
     });
 });

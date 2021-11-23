@@ -14,7 +14,7 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
 
     it('redirects to signin when not authenticated', async function () {
         await invalidateSession();
-        await visit('/integrations/slack');
+        await visit('/settings/integrations/slack');
 
         expect(currentURL(), 'currentURL').to.equal('/signin');
     });
@@ -24,9 +24,9 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/slack');
+        await visit('/settings/integrations/slack');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     it('redirects to staff page when authenticated as author', async function () {
@@ -34,9 +34,9 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/slack');
+        await visit('/settings/integrations/slack');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     it('redirects to staff page when authenticated as editor', async function () {
@@ -44,9 +44,9 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
         this.server.create('user', {roles: [role], slug: 'test-user'});
 
         await authenticateSession();
-        await visit('/integrations/slack');
+        await visit('/settings/integrations/slack');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff');
     });
 
     describe('when logged in', function () {
@@ -58,10 +58,10 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
         });
 
         it('it validates and saves slack settings properly', async function () {
-            await visit('/integrations/slack');
+            await visit('/settings/integrations/slack');
 
             // has correct url
-            expect(currentURL(), 'currentURL').to.equal('/integrations/slack');
+            expect(currentURL(), 'currentURL').to.equal('/settings/integrations/slack');
 
             await fillIn('[data-test-slack-url-input]', 'notacorrecturl');
             await click('[data-test-save-button]');
@@ -115,10 +115,10 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
         });
 
         it('warns when leaving without saving', async function () {
-            await visit('/integrations/slack');
+            await visit('/settings/integrations/slack');
 
             // has correct url
-            expect(currentURL(), 'currentURL').to.equal('/integrations/slack');
+            expect(currentURL(), 'currentURL').to.equal('/settings/integrations/slack');
 
             await fillIn('[data-test-slack-url-input]', 'https://hooks.slack.com/services/1275958430');
             await blur('[data-test-slack-url-input]');
@@ -132,9 +132,9 @@ describe('Acceptance: Settings - Integrations - Slack', function () {
 
             expect(currentURL(), 'currentURL').to.equal('/settings');
 
-            await visit('/integrations/slack');
+            await visit('/settings/integrations/slack');
 
-            expect(currentURL(), 'currentURL').to.equal('/integrations/slack');
+            expect(currentURL(), 'currentURL').to.equal('/settings/integrations/slack');
 
             // settings were not saved
             expect(

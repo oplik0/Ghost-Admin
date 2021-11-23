@@ -449,6 +449,7 @@ input:focus,
     background: #000;
 }
 
+.epm-modal .modal-content,
 .modal-content {
     background: var(--whitegrey);
 }
@@ -542,6 +543,19 @@ input:focus,
 
 .td-item-empty {
     background: var(--whitegrey-l1);
+}
+
+.gh-themes-container-labs {
+    background: var(--whitegrey-l2);
+}
+
+.gh-themes-container-labs .apps-grid {
+    background: none;
+}
+
+.gh-theme-directory-footer {
+    color: var(--darkgrey);
+    background-color: var(--whitegrey);
 }
 
 .settings-code-editor .CodeMirror-gutters,
@@ -719,6 +733,10 @@ input:focus,
 /* Koenig styles */
 .kg-link-input {
     border-color: var(--green) !important;
+}
+
+.emoji-picker__emoji:hover {
+    background: var(--lightgrey) !important;
 }
 
 /* Editor  */

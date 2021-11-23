@@ -15,11 +15,17 @@ export default class OffersController extends Controller {
     @service config;
     @service settings;
     @service store;
+    @service modals;
+    @service feature;
+    @service membersUtils;
     @service notifications;
 
     @tracked cadences = [];
     @tracked products = [];
+    @tracked portalPreviewUrl = '';
     @tracked showUnsavedChangesModal = false;
+
+    @tracked defaultSiteUrl = this.config.get('blogUrl');
 
     @tracked durations = [
         {
@@ -27,11 +33,11 @@ export default class OffersController extends Controller {
             duration: 'forever'
         },
         {
-            label: 'Once',
+            label: 'First-payment',
             duration: 'once'
         },
         {
-            label: 'Multiple months',
+            label: 'Multiple-months',
             duration: 'repeating'
         }
     ];
@@ -48,8 +54,10 @@ export default class OffersController extends Controller {
     ];
 
     @tracked defaultProps = null;
+    @tracked isDisplayTitleEdited = false;
 
     leaveScreenTransition = null;
+    portalPreviewGuid = Date.now().valueOf();
 
     constructor() {
         super(...arguments);
@@ -74,9 +82,11 @@ export default class OffersController extends Controller {
 
     get cadence() {
         if (this.offer.tier && this.offer.cadence) {
-            return `${this.offer.tier.id}-${this.offer.cadence}-${this.offer.currency}`;
+            const product = this.products.findBy('id', this.offer.tier.id);
+            return `${this.offer.tier.id}-${this.offer.cadence}-${product?.monthlyPrice?.currency}`;
         } else if (this.defaultProps) {
-            return `${this.defaultProps.tier.id}-${this.defaultProps.cadence}-${this.defaultProps.currency}`;
+            const product = this.products.findBy('id', this.defaultProps.tier.id);
+            return `${this.defaultProps.tier.id}-${this.defaultProps.cadence}-${product?.monthlyPrice?.currency}`;
         }
         return '';
     }
@@ -96,9 +106,13 @@ export default class OffersController extends Controller {
             let yearlyLabel;
             const productCurrency = product.monthlyPrice.currency;
             const productCurrencySymbol = productCurrency.toUpperCase();
-
-            monthlyLabel = `${product.name} - Monthly (${ghPriceAmount(product.monthlyPrice.amount)} ${productCurrencySymbol})`;
-            yearlyLabel = `${product.name} - Yearly (${ghPriceAmount(product.yearlyPrice.amount)} ${productCurrencySymbol})`;
+            if (this.feature.get('multipleProducts')) {
+                monthlyLabel = `${product.name} - Monthly (${ghPriceAmount(product.monthlyPrice.amount)} ${productCurrencySymbol})`;
+                yearlyLabel = `${product.name} - Yearly (${ghPriceAmount(product.yearlyPrice.amount)} ${productCurrencySymbol})`;
+            } else {
+                monthlyLabel = `Monthly (${ghPriceAmount(product.monthlyPrice.amount)} ${productCurrencySymbol})`;
+                yearlyLabel = `Yearly (${ghPriceAmount(product.yearlyPrice.amount)} ${productCurrencySymbol})`;
+            }
 
             cadences.push({
                 label: monthlyLabel,
@@ -111,9 +125,26 @@ export default class OffersController extends Controller {
             });
         });
         this.cadences = cadences;
+        const defaultCadence = this.cadences[0]?.name;
+        const [,interval, defaultCurrency] = (defaultCadence || '').split('-');
+
+        this.updateDurations(interval);
         if (this.offer && !this.offer.tier) {
             this.defaultProps = {};
-            this.updateCadence(this.cadences[0]?.name, this.defaultProps);
+            this.updateCadence(defaultCadence, this.defaultProps);
+            this.updatePortalPreview({forceRefresh: false});
+        } else if (defaultCadence) {
+            this.offertypes = [
+                {
+                    label: '%',
+                    offertype: 'percent'
+                },
+                {
+                    label: defaultCurrency.toUpperCase(),
+                    offertype: 'fixed'
+                }
+            ];
+            this.updatePortalPreview({forceRefresh: false});
         }
     }
 
@@ -137,6 +168,7 @@ export default class OffersController extends Controller {
         }
 
         try {
+            yield this.offer.validate();
             yield offer.save();
 
             // replace 'offer.new' route with 'offer' route
@@ -159,6 +191,56 @@ export default class OffersController extends Controller {
         });
 
         this.isLoading = false;
+    }
+
+    @action
+    portalPreviewInserted(iframe) {
+        this.portalPreviewIframe = iframe;
+
+        if (!this.portalMessageListener) {
+            this.portalMessageListener = (event) => {
+                const resizeEvents = ['portal-ready', 'portal-preview-updated'];
+                if (resizeEvents.includes(event.data.type) && event.data.payload?.height && this.portalPreviewIframe.parentNode) {
+                    this.portalPreviewIframe.parentNode.style.height = `${event.data.payload.height}px`;
+                }
+            };
+
+            window.addEventListener('message', this.portalMessageListener, true);
+        }
+    }
+
+    @action
+    portalPreviewDestroyed() {
+        this.portalPreviewIframe = null;
+
+        if (this.portalMessageListener) {
+            window.removeEventListener('message', this.portalMessageListener);
+        }
+    }
+
+    @action
+    updatePortalPreview({forceRefresh} = {forceRefresh: false}) {
+        const newUrl = new URL(this.membersUtils.getOfferPortalPreviewUrl({
+            name: this.offer.name || 'No Name',
+            code: this.offer.code || 'no-code',
+            displayTitle: this.offer.displayTitle,
+            displayDescription: this.offer.displayDescription,
+            type: this.offer.type,
+            cadence: this.offer.cadence || this.defaultProps?.cadence,
+            amount: this.offer.amount,
+            duration: this.offer.duration,
+            durationInMonths: this.offer.durationInMonths,
+            currency: this.offer.currency || this.defaultProps?.currency,
+            status: this.offer.currency,
+            tierId: this.offer?.tier?.id || this.defaultProps?.tier?.id
+        }));
+
+        if (forceRefresh) {
+            this.portalPreviewGuid = Date.now().valueOf();
+        }
+        newUrl.searchParams.set('v', `${this.portalPreviewGuid}`);
+
+        this.portalPreviewUrl = newUrl;
     }
 
     @action
@@ -200,7 +282,6 @@ export default class OffersController extends Controller {
     @action
     setup() {
         this.fetchProducts.perform();
-        // this.fetchOfferTask.perform();
     }
 
     @action
@@ -211,12 +292,14 @@ export default class OffersController extends Controller {
     @action
     setDiscountType(discountType) {
         if (!this.isDiscountSectionDisabled) {
+            const amount = this.offer.amount || 0;
             this._saveOfferProperty('type', discountType);
-        }
-        if (this.offer.type === 'fixed' && this.offer.amount !== '') {
-            this.offer.amount = this.offer.amount * 100;
-        } else if (this.offer.amount !== '') {
-            this.offer.amount = this.offer.amount / 100;
+            if (this.offer.type === 'fixed' && this.offer.amount !== '') {
+                this.offer.amount = amount * 100;
+            } else if (this.offer.amount !== '') {
+                this.offer.amount = amount / 100;
+            }
+            this.updatePortalPreview({forceRefresh: false});
         }
     }
 
@@ -224,7 +307,7 @@ export default class OffersController extends Controller {
     setDiscountAmount(e) {
         let amount = e.target.value;
         if (this.offer.type === 'fixed' && amount !== '') {
-            amount = parseInt(amount) * 100;
+            amount = parseFloat(amount) * 100;
         }
         this._saveOfferProperty('amount', amount);
     }
@@ -232,10 +315,14 @@ export default class OffersController extends Controller {
     @action
     setOfferName(e) {
         this._saveOfferProperty('name', e.target.value);
+        if (!this.isDisplayTitleEdited && this.offer.isNew) {
+            this._saveOfferProperty('displayTitle', e.target.value);
+        }
     }
 
     @action
     setPortalTitle(e) {
+        this.isDisplayTitleEdited = true;
         this._saveOfferProperty('displayTitle', e.target.value);
     }
 
@@ -252,6 +339,28 @@ export default class OffersController extends Controller {
     @action
     setDurationInMonths(e) {
         this._saveOfferProperty('durationInMonths', e.target.value);
+    }
+
+    @action
+    openConfirmArchiveModal() {
+        if (!this.offer.isNew) {
+            this.modals.open('modals/archive-offer', {
+                offer: this.offer
+            }, {
+                className: 'fullscreen-modal fullscreen-modal-action fullscreen-modal-wide'
+            });
+        }
+    }
+
+    @action
+    openConfirmUnarchiveModal() {
+        if (!this.offer.isNew) {
+            this.modals.open('modals/unarchive-offer', {
+                offer: this.offer
+            }, {
+                className: 'fullscreen-modal fullscreen-modal-action fullscreen-modal-wide'
+            });
+        }
     }
 
     get offerUrl() {
@@ -278,6 +387,42 @@ export default class OffersController extends Controller {
     }
 
     @action
+    updateDurations(cadence) {
+        if (cadence) {
+            if (cadence === 'month') {
+                this.durations = [
+                    {
+                        label: 'First-payment',
+                        duration: 'once'
+                    },
+                    {
+                        label: 'Multiple-months',
+                        duration: 'repeating'
+                    },
+                    {
+                        label: 'Forever',
+                        duration: 'forever'
+                    }
+                ];
+            } else {
+                this.durations = [
+                    {
+                        label: 'First-payment',
+                        duration: 'once'
+                    },
+                    {
+                        label: 'Forever',
+                        duration: 'forever'
+                    }
+                ];
+                if (this.offer.duration === 'repeating') {
+                    this._saveOfferProperty('duration', 'once');
+                }
+            }
+        }
+    }
+
+    @action
     updateCadence(cadence, offerObj) {
         offerObj = offerObj || this.offer;
         if (cadence) {
@@ -297,6 +442,8 @@ export default class OffersController extends Controller {
                     offertype: 'fixed'
                 }
             ];
+            this.updateDurations(tierCadence);
+            this.updatePortalPreview({forceRefresh: false});
         }
     }
 
@@ -316,5 +463,6 @@ export default class OffersController extends Controller {
         }
 
         this.offer[propKey] = newValue;
+        this.updatePortalPreview({forceRefresh: false});
     }
 }

@@ -51,13 +51,24 @@ export default Service.extend({
 
     emailAnalytics: feature('emailAnalytics'),
     nightShift: feature('nightShift', {user: true, onChange: '_setAdminTheme'}),
-    launchComplete: feature('launchComplete', {user: true}),
-    matchHelper: feature('matchHelper'),
     multipleProducts: feature('multipleProducts'),
-    offers: feature('offers', {developer: true}),
     oauthLogin: feature('oauthLogin', {developer: true}),
-    customThemeSettings: feature('customThemeSettings', {developer: true}),
+    customThemeSettings: feature('customThemeSettings'),
     membersActivity: feature('membersActivity', {developer: true}),
+    cardSettingsPanel: feature('cardSettingsPanel', {developer: true}),
+    membersAutoLogin: feature('membersAutoLogin', {developer: true}),
+    urlCache: feature('urlCache', {developer: true}),
+    mediaAPI: feature('mediaAPI', {developer: true}),
+    filesAPI: feature('filesAPI', {developer: true}),
+    buttonCard: feature('buttonCard', {developer: true}),
+    calloutCard: feature('calloutCard', {developer: true}),
+    nftCard: feature('nftCard', {developer: true}),
+    accordionCard: feature('accordionCard', {developer: true}),
+    gifsCard: feature('gifsCard', {developer: true}),
+    fileCard: feature('fileCard', {developer: true}),
+    audioCard: feature('audioCard', {developer: true}),
+    videoCard: feature('videoCard', {developer: true}),
+    productCard: feature('productCard', {developer: true}),
 
     _user: null,
 
@@ -95,6 +106,12 @@ export default Service.extend({
 
         // set the new key value for either the labs property or the accessibility property
         set(featureObject, key, value);
+
+        if (options.requires && value === true) {
+            options.requires.forEach((flag) => {
+                set(featureObject, flag, true);
+            });
+        }
 
         // update the 'labs' or 'accessibility' key of the model
         model.set(serviceProperty, JSON.stringify(featureObject));

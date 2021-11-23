@@ -49,37 +49,39 @@ Router.map(function () {
     this.route('settings.code-injection', {path: '/settings/code-injection'});
 
     this.route('settings.design', {path: '/settings/design'}, function () {
-        this.route('advanced');
-        this.route('change-theme');
+        this.route('change-theme', function () {
+            this.route('view', {path: ':theme_name'});
+            this.route('install');
+        });
+    });
+    // redirect for old install route used by ghost.org/marketplace
+    this.route('settings.theme-install', {path: '/settings/theme/install'});
+
+    this.route('settings.staff', {path: '/settings/staff'}, function () {
+        this.route('user', {path: ':user_slug'});
     });
 
-    // this.route('settings.products', {path: '/settings/products'});
-    // this.route('settings.product.new', {path: '/settings/product/new'});
-    // this.route('settings.product', {path: '/settings/product/:product_id'});
-
-    this.route('settings.theme', {path: '/settings/theme'}, function () {
-        this.route('uploadtheme');
-        this.route('install');
-    });
-    this.route('settings.navigation', {path: '/settings/navigation'});
-    this.route('settings.labs', {path: '/settings/labs'});
-
-    this.route('integrations', function () {
+    this.route('settings.integrations', {path: '/settings/integrations'}, function () {
         this.route('new');
     });
-    this.route('integration', {path: '/integrations/:integration_id'}, function () {
+    this.route('settings.integration', {path: '/settings/integrations/:integration_id'}, function () {
         this.route('webhooks.new', {path: 'webhooks/new'});
         this.route('webhooks.edit', {path: 'webhooks/:webhook_id'});
     });
-    this.route('integrations.slack', {path: '/integrations/slack'});
-    this.route('integrations.amp', {path: '/integrations/amp'});
-    this.route('integrations.firstpromoter', {path: '/integrations/firstpromoter'});
-    this.route('integrations.unsplash', {path: '/integrations/unsplash'});
-    this.route('integrations.zapier', {path: '/integrations/zapier'});
+    this.route('settings.integrations.slack', {path: '/settings/integrations/slack'});
+    this.route('settings.integrations.amp', {path: '/settings/integrations/amp'});
+    this.route('settings.integrations.firstpromoter', {path: '/settings/integrations/firstpromoter'});
+    this.route('settings.integrations.unsplash', {path: '/settings/integrations/unsplash'});
+    this.route('settings.integrations.zapier', {path: '/settings/integrations/zapier'});
 
-    this.route('staff', function () {
-        this.route('user', {path: ':user_slug'});
-    });
+    // TODO: remove in customThemeSettings cleanup
+    // this.route('settings.theme', {path: '/settings/theme'}, function () {
+    //     this.route('uploadtheme');
+    //     this.route('install');
+    // });
+
+    this.route('settings.navigation', {path: '/settings/navigation'});
+    this.route('settings.labs', {path: '/settings/labs'});
 
     this.route('members', function () {
         this.route('import');

@@ -15,30 +15,13 @@
                     <p>Basic publication details and site metadata</p>
                 </div>
             </LinkTo>
-            {{#if (feature "customThemeSettings")}}
-                <LinkTo class="gh-setting-group" @route="settings.design" data-test-nav="design">
-                    <span class="blue">{{svg-jar "paint-palette"}}</span>
-                    <div>
-                        <h4>Design</h4>
-                        <p>Customize your site and manage themes</p>
-                    </div>
-                </LinkTo>
-            {{else}}
-                <button type="button" class="gh-setting-group" {{action (toggle "showBrandingModal" this)}} data-test-nav="branding">
-                    <span class="blue">{{svg-jar "paint-palette"}}</span>
-                    <div>
-                        <h4>Branding</h4>
-                        <p>Upload site logo and set accent color</p>
-                    </div>
-                </button>
-                <LinkTo class="gh-setting-group" @route="settings.theme" data-test-nav="theme">
-                    <span class="green">{{svg-jar "view-site"}}</span>
-                    <div>
-                        <h4>Theme</h4>
-                        <p>Install and update themes</p>
-                    </div>
-                </LinkTo>
-            {{/if}}
+            <LinkTo class="gh-setting-group" @route="settings.design" data-test-nav="design">
+                <span class="blue">{{svg-jar "paint-palette"}}</span>
+                <div>
+                    <h4>Design</h4>
+                    <p>Customize your site and manage themes</p>
+                </div>
+            </LinkTo>
             <LinkTo class="gh-setting-group" @route="settings.navigation" data-test-nav="navigation">
                 <span class="pink">{{svg-jar "compass-2"}}</span>
                 <div>
@@ -46,16 +29,14 @@
                     <p>Set up primary and secondary menus</p>
                 </div>
             </LinkTo>
-            
-            {{#if (feature "offers")}}
-            <LinkTo class="gh-setting-group" @route="staff" data-test-nav="navigation">
+
+            <LinkTo class="gh-setting-group" @route="settings.staff" data-test-nav="navigation">
                 <span class="green">{{svg-jar "staff"}}</span>
                 <div>
                     <h4>Staff</h4>
                     <p>Manage authors, editor and collaborators</p>
                 </div>
             </LinkTo>
-            {{/if}}
         </div>
 
         <div class="gh-setting-header">Members</div>
@@ -78,6 +59,14 @@
 
         <div class="gh-setting-header">Advanced</div>
         <div class="gh-settings-main-grid">
+            <LinkTo class="gh-setting-group" @route="settings.integrations" data-test-nav="navigation">
+                <span class="yellow">{{svg-jar "module"}}</span>
+                <div>
+                    <h4>Integrations</h4>
+                    <p>Make Ghost work with apps and tools</p>
+                </div>
+            </LinkTo>
+
             <LinkTo class="gh-setting-group" @route="settings.code-injection" data-test-nav="code-injection">
                 <span class="green">{{svg-jar "brackets"}}</span>
                 <div>
@@ -85,16 +74,6 @@
                     <p>Add code to your publication</p>
                 </div>
             </LinkTo>
-            
-            {{#if (feature "offers")}}
-            <LinkTo class="gh-setting-group" @route="integrations" data-test-nav="navigation">
-                <span class="blue">{{svg-jar "module"}}</span>
-                <div>
-                    <h4>Integrations</h4>
-                    <p>Make Ghost work with apps and tools</p>
-                </div>
-            </LinkTo>
-            {{/if}}
 
             <LinkTo class="gh-setting-group" @route="settings.labs" data-test-nav="labs">
                 <span class="pink">{{svg-jar "labs"}}</span>

@@ -34,10 +34,12 @@
                 @setSaveType={{action "setSaveType"}}
                 @setTypedDateError={{action (mut this.typedDateError)}}
                 @canSendEmail={{this.canSendEmail}}
+                @emailOnly={{this.emailOnly}}
                 @recipientsFilter={{this.sendEmailWhenPublished}}
                 @setSendEmailWhenPublished={{action "setSendEmailWhenPublished"}}
                 @isSendingEmailLimited={{this.isSendingEmailLimited}}
                 @sendingEmailLimitError={{this.sendingEmailLimitError}}
+                @distributionAction={{this.distributionAction}}
                 @setDistributionAction={{action "setDistributionAction"}}
                 data-test-publishmenu-draft="true" />
         {{/if}}
@@ -70,7 +72,7 @@
         @model={{hash
             sendEmailWhenPublished=this.sendEmailWhenPublished
             isScheduled=(eq this.saveType "schedule")
-            emailOnly=this.post.emailOnly
+            emailOnly=this.emailOnly
             retryEmailSend=this.retryEmailSend
         }}
         @confirm={{this.confirmEmailSend}}

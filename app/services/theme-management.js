@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import config from 'ghost-admin/config/environment';
+import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {isThemeValidationError} from 'ghost-admin/services/ajax';
 import {inject as service} from '@ember/service';
@@ -13,11 +14,57 @@ export default class ThemeManagementService extends Service {
     @service limit;
     @service modals;
     @service settings;
+    @service store;
+    @service frontend;
 
+    @tracked isUploading;
+    @tracked previewType = 'homepage';
     @tracked previewHtml;
 
+    allPosts = this.store.peekAll('post');
+
+    availablePreviewTypes = [{
+        name: 'homepage',
+        label: 'Homepage'
+    }, {
+        name: 'post',
+        label: 'Post'
+    }]
+
+    get latestPublishedPost() {
+        return this.allPosts.toArray().filterBy('status', 'published').sort((a, b) => {
+            return b.publishedAtUTC.valueOf() - a.publishedAtUTC.valueOf();
+        }).lastObject;
+    }
+
+    @action
+    setPreviewType(type) {
+        if (type !== this.previewType) {
+            this.previewType = type;
+            this.updatePreviewHtmlTask.perform();
+        }
+    }
+
+    @action
+    async upload(options = {}) {
+        try {
+            // Sending a bad string to make sure it fails (empty string isn't valid)
+            await this.limit.limiter.errorIfWouldGoOverLimit('customThemes', {value: '.'});
+        } catch (error) {
+            if (error.errorType === 'HostLimitError') {
+                return this.modals.open('modals/limits/custom-theme', {
+                    message: error.message
+                });
+            }
+
+            throw error;
+        }
+
+        return this.modals.open('modals/design/upload-theme', options);
+    }
+
     @task
-    *activateTask(theme) {
+    *activateTask(theme, options = {}) {
         let resultModal = null;
 
         try {
@@ -43,47 +90,53 @@ export default class ThemeManagementService extends Service {
             try {
                 const activatedTheme = yield theme.activate();
 
+                yield this.customThemeSettings.reload();
+
+                // must come after settings reload has finished otherwise we'll preview previous theme settings
                 this.updatePreviewHtmlTask.perform();
-                this.customThemeSettings.load();
 
-                const {warnings, errors} = activatedTheme;
+                if (!options.skipErrors) {
+                    const {warnings, errors} = activatedTheme;
 
-                if (!isEmpty(warnings) || !isEmpty(errors)) {
-                    resultModal = this.modals.open('modals/design/theme-errors', {
-                        title: 'Activation successful',
-                        canActivate: true,
-                        warnings,
-                        errors
-                    });
+                    if (!isEmpty(warnings) || !isEmpty(errors)) {
+                        resultModal = this.modals.open('modals/design/theme-errors', {
+                            title: 'Activation successful',
+                            canActivate: true,
+                            warnings,
+                            errors
+                        });
 
-                    yield resultModal;
+                        yield resultModal;
+                    }
                 }
             } catch (error) {
-                if (isThemeValidationError(error)) {
-                    let errors = error.payload.errors[0].details.errors;
-                    let fatalErrors = [];
-                    let normalErrors = [];
+                if (!options.skipErrors) {
+                    if (isThemeValidationError(error)) {
+                        let errors = error.payload.errors[0].details.errors;
+                        let fatalErrors = [];
+                        let normalErrors = [];
 
-                    // to have a proper grouping of fatal errors and none fatal, we need to check
-                    // our errors for the fatal property
-                    if (errors.length > 0) {
-                        for (let i = 0; i < errors.length; i += 1) {
-                            if (errors[i].fatal) {
-                                fatalErrors.push(errors[i]);
-                            } else {
-                                normalErrors.push(errors[i]);
+                        // to have a proper grouping of fatal errors and none fatal, we need to check
+                        // our errors for the fatal property
+                        if (errors.length > 0) {
+                            for (let i = 0; i < errors.length; i += 1) {
+                                if (errors[i].fatal) {
+                                    fatalErrors.push(errors[i]);
+                                } else {
+                                    normalErrors.push(errors[i]);
+                                }
                             }
                         }
+
+                        resultModal = this.modals.open('modals/design/theme-errors', {
+                            title: 'Activation failed',
+                            canActivate: false,
+                            errors: normalErrors,
+                            fatalErrors
+                        });
+
+                        yield resultModal;
                     }
-
-                    resultModal = this.modals.open('modals/design/theme-errors', {
-                        title: 'Activation failed',
-                        canActivate: false,
-                        errors: normalErrors,
-                        fatalErrors
-                    });
-
-                    yield resultModal;
                 }
 
                 throw error;
@@ -102,18 +155,26 @@ export default class ThemeManagementService extends Service {
             return;
         }
 
-        // grab the preview html
-        const ajaxOptions = {
-            contentType: 'text/html;charset=utf-8',
-            dataType: 'text',
-            headers: {
-                'x-ghost-preview': this.previewData
-            }
-        };
+        let frontendUrl = '/';
 
-        // TODO: config.blogUrl always removes trailing slash - switch to always have trailing slash
-        const frontendUrl = `${this.config.get('blogUrl')}/`;
-        const previewContents = yield this.ajax.post(frontendUrl, ajaxOptions);
+        if (this.previewType === 'post') {
+            // in case we haven't loaded any posts so far
+            if (!this.latestPublishedPost) {
+                yield this.store.query('post', {filter: 'status:published', order: 'published_at DESC', limit: 1});
+            }
+
+            frontendUrl = this.latestPublishedPost.url;
+        }
+
+        const previewResponse = yield this.frontend.fetch(frontendUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/html;charset=utf-8',
+                'x-ghost-preview': this.previewData,
+                Accept: 'text/plain'
+            }
+        });
+        const previewContents = yield previewResponse.text();
 
         // inject extra CSS to disable navigation and prevent clicks
         const injectedCss = `html { pointer-events: none; }`;
@@ -126,7 +187,8 @@ export default class ThemeManagementService extends Service {
         stylesheet.innerHTML = `${originalCSS}\n\n${injectedCss}`;
 
         // replace the iframe contents with the doctored preview html
-        this.previewHtml = htmlDoc.documentElement.outerHTML;
+        const doctype = new XMLSerializer().serializeToString(htmlDoc.doctype);
+        this.previewHtml = doctype + htmlDoc.documentElement.outerHTML;
     }
 
     get previewData() {

@@ -41,6 +41,8 @@ export default Component.extend({
 
     hasEmailPermission: or('session.user.isOwnerOnly', 'session.user.isAdminOnly', 'session.user.isEditor'),
 
+    emailOnly: computed.equal('distributionAction', 'send'),
+
     canSendEmail: computed('hasEmailPermission', 'post.{isPost,email}', 'settings.{editorDefaultEmailRecipients,membersSignupAccess,mailgunIsConfigured}', 'config.mailgunIsConfigured', function () {
         let isDisabled = this.settings.get('editorDefaultEmailRecipients') === 'disabled' || this.settings.get('membersSignupAccess') === 'none';
         let mailgunIsConfigured = this.settings.get('mailgunIsConfigured') || this.config.get('mailgunIsConfigured');
@@ -96,16 +98,24 @@ export default Component.extend({
         return runningText || 'Publishing';
     }),
 
-    buttonText: computed('postState', 'saveType', 'distributionAction', function () {
+    buttonText: computed('postState', 'saveType', 'distributionAction', 'sendEmailWhenPublished', function () {
         let saveType = this.saveType;
         let postState = this.postState;
-        let distributionAction = this.get('distributionAction');
+        let distributionAction = this.distributionAction;
         let buttonText;
 
         if (postState === 'draft') {
             switch (distributionAction) {
             case 'publish_send':
-                buttonText = (saveType === 'publish') ? 'Publish & send' : 'Schedule';
+                if (saveType === 'publish') {
+                    buttonText = 'Publish';
+
+                    if (this.canSendEmail && this.sendEmailWhenPublished && this.sendEmailWhenPublished !== 'none') {
+                        buttonText = `${buttonText} & send`;
+                    }
+                } else {
+                    buttonText = 'Schedule';
+                }
                 break;
             case 'publish':
                 buttonText = (saveType === 'publish') ? 'Publish' : 'Schedule';
@@ -199,6 +209,10 @@ export default Component.extend({
         this._postStatus = this.postStatus;
         this.setDefaultSendEmailWhenPublished();
         this.checkIsSendingEmailLimitedTask.perform();
+
+        if (this.post.isPage) {
+            this.set('distributionAction', 'publish');
+        }
     },
 
     actions: {
@@ -224,11 +238,9 @@ export default Component.extend({
             this.set('distributionAction', distributionAction);
 
             if (distributionAction === 'publish') {
-                this.set('sendEmailWhenPublished', false);
-                this.set('post.emailRecipientFilter', 'none');
+                this.set('sendEmailWhenPublished', 'none');
             } else {
                 this.set('sendEmailWhenPublished', this.defaultEmailRecipients);
-                this.set('post.emailRecipientFilter', this.defaultEmailRecipients);
             }
         },
 
@@ -386,6 +398,7 @@ export default Component.extend({
     save: task(function* ({dropdown} = {}) {
         let {
             post,
+            emailOnly,
             sendEmailWhenPublished,
             sendEmailConfirmed,
             saveType,
@@ -431,7 +444,7 @@ export default Component.extend({
 
         try {
             // will show alert for non-date related failed validations
-            post = yield this.saveTask.perform({sendEmailWhenPublished});
+            post = yield this.saveTask.perform({sendEmailWhenPublished, emailOnly});
 
             this._cachePublishedAtBlogTZ();
             return post;
@@ -448,6 +461,7 @@ export default Component.extend({
     },
 
     _cleanup() {
+        this.set('distributionAction', 'publish_send');
         this.set('showConfirmEmailModal', false);
 
         // when closing the menu we reset the publishedAtBlogTZ date so that the

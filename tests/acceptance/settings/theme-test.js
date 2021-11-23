@@ -9,7 +9,8 @@ import {setupApplicationTest} from 'ember-mocha';
 import {setupMirage} from 'ember-cli-mirage/test-support';
 import {visit} from '../../helpers/visit';
 
-describe('Acceptance: Settings - Theme', function () {
+// TODO: remove along with customThemeSettings feature flag removal
+describe.skip('Acceptance: Settings - Theme', function () {
     let hooks = setupApplicationTest();
     setupMirage(hooks);
 
@@ -27,7 +28,7 @@ describe('Acceptance: Settings - Theme', function () {
         await authenticateSession();
         await visit('/settings/theme');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     it('redirects to staff page when authenticated as author', async function () {
@@ -37,7 +38,7 @@ describe('Acceptance: Settings - Theme', function () {
         await authenticateSession();
         await visit('/settings/theme');
 
-        expect(currentURL(), 'currentURL').to.equal('/staff/test-user');
+        expect(currentURL(), 'currentURL').to.equal('/settings/staff/test-user');
     });
 
     describe('when logged in', function () {
