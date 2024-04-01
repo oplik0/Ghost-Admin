@@ -43,7 +43,7 @@
     "@tryghost/string": "0.1.21",
     "@tryghost/timezone-data": "0.2.53",
     "autoprefixer": "9.8.6",
-    "babel-eslint": "10.1.0",
+    "@babel/eslint-parser": "7.11.0",
     "blueimp-md5": "2.19.0",
     "broccoli-asset-rev": "3.0.0",
     "broccoli-concat": "4.2.5",
