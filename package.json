@@ -33,7 +33,7 @@
     "@joeattardi/emoji-button": "4.6.0",
     "@nexes/nql-lang": "0.0.1",
     "@sentry/ember": "6.15.0",
-    "@tryghost/color-utils": "0.1.5",
+    "@tryghost/color-utils": "0.2.1",
     "@tryghost/helpers": "1.1.53",
     "@tryghost/kg-clean-basic-html": "2.2.1",
     "@tryghost/kg-parser-plugins": "2.6.2",
