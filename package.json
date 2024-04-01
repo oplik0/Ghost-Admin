@@ -39,7 +39,7 @@
     "@tryghost/kg-parser-plugins": "2.6.2",
     "@tryghost/limit-service": "1.0.0",
     "@tryghost/members-csv": "1.1.8",
-    "@tryghost/mobiledoc-kit": "0.12.5-ghost.1",
+    "@tryghost/mobiledoc-kit": "0.12.5-ghost.2",
     "@tryghost/string": "0.1.21",
     "@tryghost/timezone-data": "0.2.53",
     "autoprefixer": "9.8.6",
