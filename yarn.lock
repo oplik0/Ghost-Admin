@@ -1440,20 +1440,7 @@
     resolve "^1.8.1"
     semver "^7.3.2"
 
-"@embroider/macros@^0.47.0":
-  version "0.47.0"
-  resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-0.47.0.tgz#062f0dc7861f81a6f4c38a754f94c63150557069"
-  integrity sha512-xOLfITKKwAtK/W6aIchCjKlZy2gGoCnARypPZfT6iDr3Xl3JOCgnxZSZ9uhyDzIA9ZmA9aijB4uLU9yaT1tdeg==
-  dependencies:
-    "@embroider/shared-internals" "0.47.0"
-    assert-never "^1.2.1"
-    ember-cli-babel "^7.26.6"
-    find-up "^5.0.0"
-    lodash "^4.17.21"
-    resolve "^1.20.0"
-    semver "^7.3.2"
-
-"@embroider/macros@~0.47.2":
+"@embroider/macros@^0.47.0", "@embroider/macros@~0.47.2":
   version "0.47.2"
   resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-0.47.2.tgz#23cbe92cac3c24747f054e1eea2a22538bf7ebd0"
   integrity sha512-ViNWluJCeM5OPlM3rs8kdOz3RV5rpfXX5D2rDnc/q86xRS0xf4NFEjYRV7W6fBcD0b3v5jSHDTwrjq9Kee4rHg==
@@ -1491,19 +1478,6 @@
     resolve-package-path "^1.2.2"
     semver "^7.3.2"
     typescript-memoize "^1.0.0-alpha.3"
-
-"@embroider/shared-internals@0.47.0":
-  version "0.47.0"
-  resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-0.47.0.tgz#7288946560044199487ebbb7ac9f4be13c4db19b"
-  integrity sha512-ANB/6VAVZuIXhvCogtbZ17zskdG2M62nK+M5T5XdUCaHOnX4fMAhbJc2it41+R9PN4AXgAoYG+qiid+1HG1CUQ==
-  dependencies:
-    babel-import-util "^0.2.0"
-    ember-rfc176-data "^0.3.17"
-    fs-extra "^9.1.0"
-    lodash "^4.17.21"
-    resolve-package-path "^4.0.1"
-    semver "^7.3.5"
-    typescript-memoize "^1.0.1"
 
 "@embroider/shared-internals@0.47.2":
   version "0.47.2"
@@ -6303,7 +6277,7 @@ ember-cli-htmlbars@^4.2.0, ember-cli-htmlbars@^4.2.3, ember-cli-htmlbars@^4.3.1:
     strip-bom "^4.0.0"
     walk-sync "^2.0.2"
 
-ember-cli-htmlbars@^5.1.0, ember-cli-htmlbars@^5.1.2, ember-cli-htmlbars@^5.2.0, ember-cli-htmlbars@^5.3.1, ember-cli-htmlbars@^5.3.2, ember-cli-htmlbars@^5.6.3, ember-cli-htmlbars@^5.7.1:
+ember-cli-htmlbars@^5.1.0, ember-cli-htmlbars@^5.1.2, ember-cli-htmlbars@^5.2.0, ember-cli-htmlbars@^5.3.1, ember-cli-htmlbars@^5.3.2, ember-cli-htmlbars@^5.7.1:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-5.7.1.tgz#eb5b88c7d9083bc27665fb5447a9b7503b32ce4f"
   integrity sha512-9laCgL4tSy48orNoQgQKEHp93MaqAs9ZOl7or5q+8iyGGJHW6sVXIYrVv5/5O9HfV6Ts8/pW1rSoaeKyLUE+oA==
@@ -6713,7 +6687,7 @@ ember-concurrency-decorators@2.0.3, ember-concurrency-decorators@^2.0.0:
     ember-cli-htmlbars "^4.3.1"
     ember-cli-typescript "^3.1.4"
 
-ember-concurrency@2.2.0:
+ember-concurrency@2.2.0, "ember-concurrency@>=1.0.0 <3", "ember-concurrency@^0.8.27 || ^0.9.0 || ^0.10.0 || ^1.0.0 || ^2.0.0-rc.1":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-2.2.0.tgz#0acfb8ca855e0fdfa4c543be150028299a89ba32"
   integrity sha512-Ns1MH6t08oJqfeWQ4EMxyf6bLsXM87SbUPwGNUsg7idpikvkGr1PWqtvU6qxDTv1mA4Vrwdhv0I9yxN0ShH9Bg==
@@ -6721,17 +6695,6 @@ ember-concurrency@2.2.0:
     "@glimmer/tracking" "^1.0.4"
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
-    ember-compatibility-helpers "^1.2.0"
-    ember-destroyable-polyfill "^2.0.2"
-
-"ember-concurrency@>=1.0.0 <3", "ember-concurrency@^0.8.27 || ^0.9.0 || ^0.10.0 || ^1.0.0 || ^2.0.0-rc.1":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-2.1.2.tgz#a27178fb24951933fa72dd7cf1dca852693cc5c1"
-  integrity sha512-xC6L/SKuM08e9TK5igkSEwbAtkX2sqrj9Xap9G3zYSYdAIO7fcS6ZNEaD5e+dVXwPqH3tOIq41ZT7fqQ7mQ0KQ==
-  dependencies:
-    "@glimmer/tracking" "^1.0.2"
-    ember-cli-babel "^7.22.1"
-    ember-cli-htmlbars "^5.6.3"
     ember-compatibility-helpers "^1.2.0"
     ember-destroyable-polyfill "^2.0.2"
 
@@ -6867,10 +6830,10 @@ ember-factory-for-polyfill@^1.3.1:
   dependencies:
     ember-cli-version-checker "^2.1.0"
 
-ember-fetch@8.1.1:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/ember-fetch/-/ember-fetch-8.1.1.tgz#d68d4a58529121a572ec09c39c6a3ad174c83a2e"
-  integrity sha512-Xi1wNmPtVmfIoFH675AA0ELIdYUcoZ2p+6j9c8eDFjiGJiFesyp01bDtl5ryBI/1VPOByJLsDkT+4C11HixsJw==
+ember-fetch@8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/ember-fetch/-/ember-fetch-8.1.2.tgz#651839780519319309127054786bf35cd4b84543"
+  integrity sha512-TVx24/jrvDIuPL296DV0hBwp7BWLcSMf0I8464KGz01sPytAB+ZAePbc9ooBTJDkKZEGFgatJa4nj3yF1S9Bpw==
   dependencies:
     abortcontroller-polyfill "^1.7.3"
     broccoli-concat "^4.2.5"
@@ -14673,45 +14636,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testem@3.6.0:
+testem@3.6.0, testem@^3.2.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/testem/-/testem-3.6.0.tgz#bf5c86944bafd035c18f41f520195cce5eef33a8"
   integrity sha512-sXwx2IlOadOhrKf0hsV1Yt/yuYhdfrtJ4dpp7T6pFN62GjMyKifjAv2SFm+4zYHee1JwxheO7JUL0+3iN0rlHw==
-  dependencies:
-    "@xmldom/xmldom" "^0.7.1"
-    backbone "^1.1.2"
-    bluebird "^3.4.6"
-    charm "^1.0.0"
-    commander "^2.6.0"
-    compression "^1.7.4"
-    consolidate "^0.15.1"
-    execa "^1.0.0"
-    express "^4.10.7"
-    fireworm "^0.7.0"
-    glob "^7.0.4"
-    http-proxy "^1.13.1"
-    js-yaml "^3.2.5"
-    lodash.assignin "^4.1.0"
-    lodash.castarray "^4.4.0"
-    lodash.clonedeep "^4.4.1"
-    lodash.find "^4.5.1"
-    lodash.uniqby "^4.7.0"
-    mkdirp "^0.5.1"
-    mustache "^3.0.0"
-    node-notifier "^9.0.1"
-    npmlog "^4.0.0"
-    printf "^0.6.1"
-    rimraf "^2.4.4"
-    socket.io "^4.1.2"
-    spawn-args "^0.2.0"
-    styled_string "0.0.1"
-    tap-parser "^7.0.0"
-    tmp "0.0.33"
-
-testem@^3.2.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/testem/-/testem-3.5.0.tgz#c77cc1e46114c60f6f16c4f221a8a222346fb211"
-  integrity sha512-qucRtq6aDVrCc6aEyz15CxIpjij95B8XTHpRT7xrTdTw3iFypZw95DQjX+EnGmGIqUB7CGapv3L2OP+HAlHUBg==
   dependencies:
     "@xmldom/xmldom" "^0.7.1"
     backbone "^1.1.2"
